@@ -1,11 +1,16 @@
 import { Heart, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CustomJumbotron } from "@/components/custom/CustomJumbotron";
 import { HeroStats } from "@/heroes/components/HeroStats";
 import { HeroGrid } from "@/heroes/components/HeroGrid";
+import { useState } from "react";
 
 export const HomePage = () => {
+  const [activeTab, setActiveTab] = useState<
+    "all" | "favorites" | "heroes" | "villains"
+  >("all");
+
   return (
     <>
       <>
@@ -19,20 +24,54 @@ export const HomePage = () => {
         <HeroStats />
 
         {/* Tabs */}
-        <Tabs value="all" className="mb-8">
+        <Tabs value={activeTab} className="mb-8">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="all">All Characters (16)</TabsTrigger>
-            <TabsTrigger value="favorites" className="flex items-center gap-2">
+            <TabsTrigger value="all" onClick={() => setActiveTab("all")}>
+              All Characters (16)
+            </TabsTrigger>
+            <TabsTrigger
+              value="favorites"
+              onClick={() => setActiveTab("favorites")}
+              className="flex items-center gap-2"
+            >
               <Heart className="h-4 w-4" />
               Favorites (3)
             </TabsTrigger>
-            <TabsTrigger value="heroes">Heroes (12)</TabsTrigger>
-            <TabsTrigger value="villains">Villains (2)</TabsTrigger>
+            <TabsTrigger value="heroes" onClick={() => setActiveTab("heroes")}>
+              Heroes (12)
+            </TabsTrigger>
+            <TabsTrigger
+              value="villains"
+              onClick={() => setActiveTab("villains")}
+            >
+              Villains (2)
+            </TabsTrigger>
           </TabsList>
-        </Tabs>
 
-        {/* Character Grid */}
-        <HeroGrid></HeroGrid>
+          <TabsContent value="all">
+            {/* Mostrar todos los personajes */}
+            <h1>Todos los personajes</h1>
+            <HeroGrid></HeroGrid>
+          </TabsContent>
+
+          <TabsContent value="favorites">
+            {/* Mostrar todos los personajes favoritos */}
+            <h1>Favoritos!!</h1>
+            <HeroGrid></HeroGrid>
+          </TabsContent>
+
+          <TabsContent value="heroes">
+            {/* Mostrar todos los Heroes */}
+            <h1>Heroes</h1>
+            <HeroGrid></HeroGrid>
+          </TabsContent>
+
+          <TabsContent value="villains">
+            {/* Mostrar todos los villanos */}
+            <h1>Villanos</h1>
+            <HeroGrid></HeroGrid>
+          </TabsContent>
+        </Tabs>
 
         {/* Pagination */}
         <div className="flex items-center justify-center space-x-2">
