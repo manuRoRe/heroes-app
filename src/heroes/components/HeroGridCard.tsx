@@ -1,9 +1,11 @@
+import type { Hero } from "../interfaces/hero.interface";
+import { useNavigate } from "react-router";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Heart, Eye, Zap, Brain, Gauge, Shield } from "lucide-react";
-import type { Hero } from "../interfaces/hero.interface";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -11,6 +13,10 @@ interface Props {
 }
 
 export const HeroGridCard = ({ hero }: Props) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => navigate(`/heroes/${hero.slug}`);
+
   return (
     <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-gray-50">
       <div className="relative h-64">
@@ -18,6 +24,7 @@ export const HeroGridCard = ({ hero }: Props) => {
           src={hero.image}
           alt={hero.alias}
           className="object-cover transition-all duration-500 group-hover:scale-110 absolute top-[-30px] w-full h-[410px]"
+          onClick={handleClick}
         />
 
         {/* Status indicator */}
