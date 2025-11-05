@@ -5,5 +5,5 @@ export const HeroPage = () => {
 
   console.log(idSlug);
 
-  return <div>HeroPage</div>;
+  return <div>{idSlug}</div>;
 };
