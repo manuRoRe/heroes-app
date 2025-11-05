@@ -6,18 +6,20 @@ import { getHero } from "@/heroes/actions/get-hero.action";
 
 import { useQuery } from "@tanstack/react-query";
 import { Award, Brain, Gauge, Shield, Star, Users, Zap } from "lucide-react";
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
 
 export const HeroPage = () => {
   const { idSlug = "" } = useParams();
 
   console.log(idSlug);
 
-  const { data: superheroData } = useQuery({
+  const { data: superheroData, isError } = useQuery({
     queryKey: ["superhero", idSlug],
     queryFn: () => getHero(idSlug),
-    staleTime: 1000 * 60 * 5,
+    retry: false,
   });
+
+  if (isError) return <Navigate to="/" />;
 
   if (superheroData === undefined) return <h1>Loading...</h1>;
 
