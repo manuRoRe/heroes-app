@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { useMemo } from "react";
 
@@ -9,8 +8,8 @@ import { HeroStats } from "@/heroes/components/HeroStats";
 import { HeroGrid } from "@/heroes/components/HeroGrid";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { CustomBreadcrumbs } from "@/components/custom/CustomBreadcrumbs";
-import { getHeroesByPageAction } from "@/heroes/actions/get-heroes-by-page.action";
 import { useHeroSummary } from "@/heroes/hooks/useHeroSummary";
+import { usePaginatedHero } from "@/heroes/hooks/usePaginatedHero";
 
 export const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,6 +17,7 @@ export const HomePage = () => {
   const activeTab = searchParams.get("tab") ?? "all";
   const page = searchParams.get("page") ?? 1;
   const limit = searchParams.get("limit") ?? 6;
+  const category = searchParams.get("category") ?? "all";
 
   const selectedTab = useMemo(() => {
     const validTabs = ["all", "favorites", "heroes", "villains"];
@@ -29,12 +29,7 @@ export const HomePage = () => {
     "all" | "favorites" | "heroes" | "villains"
   >("all"); */
 
-  const { data: dataHeroes } = useQuery({
-    queryKey: ["heroes", { page, limit }],
-    queryFn: () => getHeroesByPageAction(+page, +limit),
-    staleTime: 1000 * 60 * 5, //! 5 minutes
-  });
-
+  const { data: dataHeroes } = usePaginatedHero(+page, +limit, category);
   const { data: summary } = useHeroSummary();
 
   return (
@@ -59,6 +54,8 @@ export const HomePage = () => {
               onClick={() =>
                 setSearchParams((prev) => {
                   prev.set("tab", "all");
+                  prev.set("category", "all");
+                  prev.set("page", "1");
                   return prev;
                 })
               }
@@ -71,6 +68,8 @@ export const HomePage = () => {
               onClick={() =>
                 setSearchParams((prev) => {
                   prev.set("tab", "favorites");
+                  prev.set("category", "favorites");
+                  prev.set("page", "1");
                   return prev;
                 })
               }
@@ -84,6 +83,9 @@ export const HomePage = () => {
               onClick={() =>
                 setSearchParams((prev) => {
                   prev.set("tab", "heroes");
+                  prev.set("category", "hero");
+                  prev.set("page", "1");
+
                   return prev;
                 })
               }
@@ -95,6 +97,8 @@ export const HomePage = () => {
               onClick={() =>
                 setSearchParams((prev) => {
                   prev.set("tab", "villains");
+                  prev.set("category", "villain");
+                  prev.set("page", "1");
                   return prev;
                 })
               }
@@ -112,7 +116,6 @@ export const HomePage = () => {
           <TabsContent value="favorites">
             {/* Mostrar todos los personajes favoritos */}
             <h1>Favoritos!!</h1>
-            <HeroGrid heroes={dataHeroes?.heroes ?? []}></HeroGrid>
           </TabsContent>
 
           <TabsContent value="heroes">
