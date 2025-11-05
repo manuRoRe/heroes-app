@@ -33,7 +33,7 @@ export const HomePage = () => {
   }, []); */
 
   const { data: dataHeroes } = useQuery({
-    queryKey: ["heroes"],
+    queryKey: ["heroes", { page, limit }],
     queryFn: () => getHeroesByPageAction(+page, +limit),
     staleTime: 1000 * 60 * 5, //! 5 minutes
   });
@@ -130,7 +130,7 @@ export const HomePage = () => {
         </Tabs>
 
         {/* Pagination */}
-        <CustomPagination totalPages={5} />
+        <CustomPagination totalPages={dataHeroes?.pages ?? 1} />
       </>
     </>
   );
