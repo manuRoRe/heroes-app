@@ -32,7 +32,7 @@ export const HomePage = () => {
 
   const { data: dataHeroes } = usePaginatedHero(+page, +limit, category);
   const { data: summary } = useHeroSummary();
-  const { favorites } = use(FavoriteHeroContext);
+  const { favorites, favoriteCount } = use(FavoriteHeroContext);
 
   return (
     <>
@@ -78,7 +78,7 @@ export const HomePage = () => {
               className="flex items-center gap-2"
             >
               <Heart className="h-4 w-4" />
-              Favorites (3)
+              Favorites ({favoriteCount})
             </TabsTrigger>
             <TabsTrigger
               value="heroes"
@@ -135,7 +135,9 @@ export const HomePage = () => {
         </Tabs>
 
         {/* Pagination */}
-        <CustomPagination totalPages={dataHeroes?.pages ?? 1} />
+        {selectedTab !== "favorites" && (
+          <CustomPagination totalPages={dataHeroes?.pages ?? 1} />
+        )}
       </>
     </>
   );
